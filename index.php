@@ -9,7 +9,7 @@
  */
 
 // YOUR FOLDER OF ROMS
-$GAMES_FOLDER = "D:\Emulatorer\MSX\Games\Cartridges";
+$GAMES_FOLDER = 'C:\MSX\Games\roms';
 
 
 $doc = new DomDocument();
@@ -18,7 +18,7 @@ $doc->formatOutput = true;
 $root = $doc->createElement('GameList');
 $root = $doc->appendChild($root);
 
-$folderArray = scandir($GAMES_FOLDER);
+$folderArray = scandir($GAMES_FOLDER, 0);
 
 foreach ($folderArray as $dir) {
     if (!is_dir($dir)) {
@@ -46,7 +46,8 @@ Header('Content-type: text/xml');
 print($xmlString);
 
 // Output xml to file
-$gameListFile = fopen('gamelist.xml', "w");
+$gameListFile = fopen($GAMES_FOLDER . '/gamelist.xml', "w");
+
 fwrite($gameListFile, $xmlString);
 fclose($gameListFile);
 
