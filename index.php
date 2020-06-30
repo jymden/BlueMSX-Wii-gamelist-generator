@@ -18,15 +18,18 @@ $doc->formatOutput = true;
 $root = $doc->createElement('GameList');
 $root = $doc->appendChild($root);
 
-//$root = $root->appendChild($root);
+$folderArray = scandir($GAMES_FOLDER);
 
-foreach (scandir($GAMES_FOLDER, 0) as $dir) {
+foreach ($folderArray as $dir) {
     if (!is_dir($dir)) {
+        // Create game title from file name (exclude file type)
         $gameTitle = pathinfo($dir, PATHINFO_FILENAME);
 
+        // Create Game node
         $game = $doc->createElement('Game');
         $game->setAttribute('Title', $gameTitle);
 
+        // Create command node, with command for running the rom
         $commandLine = $doc->createElement('CommandLine', '/rom1 "' . htmlspecialchars($dir) . '"');
         $game->appendChild($commandLine);
 
@@ -35,11 +38,15 @@ foreach (scandir($GAMES_FOLDER, 0) as $dir) {
     }
 }
 
+// Make xml string
 $xmlString = $doc->saveXML();
 
+// Output xml on screen
 Header('Content-type: text/xml');
 print($xmlString);
 
+// Output xml to file
 $gameListFile = fopen('gamelist.xml', "w");
 fwrite($gameListFile, $xmlString);
+fclose($gameListFile);
 
